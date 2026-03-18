@@ -44,6 +44,28 @@ De estas señales brutas, los algoritmos extraen **features** (características)
 
 El proceso completo de decodificación neuronal es un pipeline de múltiples etapas, cada una con sus propios algoritmos:
 
+```mermaid
+flowchart TD
+    A["🧠 <b>CEREBRO</b><br/>Neuronas generan spikes<br/><i>~10 µV, 1 ms</i>"]
+    B["⚡ <b>Etapa 1: Adquisición y filtrado</b><br/>1.024 electrodos × 20.000 muestras/s<br/>Chip ASIC filtra ruido"]
+    C["📊 <b>Etapa 2: Spike Sorting</b><br/>Algoritmo BOSS en el implante<br/>Compresión 200x en 900 ns"]
+    D["📐 <b>Etapa 3: Extracción de features</b><br/>Tasa de disparo, intervalos,<br/>correlación espacial, bandas LFP"]
+    E["🤖 <b>Etapa 4: Decodificación IA</b><br/>Kalman / CNN / RNN-LSTM / Transformer"]
+    F["🎯 <b>Etapa 5: Generación de salida</b><br/>Cursor · Texto · Voz · Brazo robótico"]
+    G["🔄 <b>Etapa 6: Aprendizaje adaptativo</b><br/>Recalibración + neuroplasticidad<br/><i>Co-aprendizaje IA ↔ cerebro</i>"]
+
+    A -->|"Señal eléctrica bruta"| B
+    B -->|"Señal filtrada"| C
+    C -->|"Spikes comprimidos vía Bluetooth"| D
+    D -->|"Vectores de características"| E
+    E -->|"Intención decodificada"| F
+    F -->|"Feedback visual/auditivo"| A
+    G -.->|"Actualiza modelos"| E
+    F -.->|"Datos de uso"| G
+```
+
+A continuación se describe cada etapa en detalle.
+
 ### Etapa 1: Adquisición y filtrado de señal
 
 Las señales brutas contienen tanto señal útil como ruido eléctrico (artefactos musculares, interferencia electromagnética, ruido térmico del circuito). Algoritmos de filtrado digital eliminan las frecuencias fuera de banda y aíslan la actividad neuronal relevante. Esto se ejecuta directamente en el chip ASIC personalizado de Neuralink dentro del implante.
@@ -120,27 +142,26 @@ Este es uno de los aspectos más interesantes desde el punto de vista de modelos
 
 ### 4.1. Pipeline completo
 
-```
-Córtex motor del habla
-        ↓
-[Microelectrodos registran actividad neuronal
- mientras el usuario INTENTA hablar]
-        ↓
-[Spike sorting + extracción de features]
-        ↓
-[RNN de 5 capas procesa secuencia temporal]
-        ↓
-[Salida: probabilidad de 39 fonemas cada 80ms]
-        ↓
-[Modelo de lenguaje (n-grama, 125.000 palabras)
- determina la secuencia de palabras más probable]
-        ↓
-[Texto generado]
-        ↓
-[Vocoder / TTS convierte texto en voz sintética]
-        ↓
-[Voz personalizada: modelo entrenado con
- grabaciones previas a la enfermedad del paciente]
+```mermaid
+flowchart TD
+    A["🧠 <b>Córtex motor del habla</b><br/>El usuario INTENTA hablar<br/><i>(o imagina hablar)</i>"]
+    B["⚡ <b>Microelectrodos</b><br/>Registran actividad neuronal<br/>en áreas del lenguaje"]
+    C["📊 <b>Spike sorting + features</b><br/>Detección, clasificación<br/>y extracción de características"]
+    D["🧬 <b>RNN de 5 capas</b><br/>Procesa secuencia temporal<br/>de actividad neuronal"]
+    E["🔤 <b>Probabilidades de fonemas</b><br/>39 fonemas + silencio<br/><i>cada 80 milisegundos</i>"]
+    F["📖 <b>Modelo de lenguaje</b><br/>N-grama, 125.000 palabras<br/>Determina secuencia más probable"]
+    G["📝 <b>Texto generado</b><br/>Frase decodificada<br/>a partir de las probabilidades"]
+    H["🔊 <b>Vocoder / TTS</b><br/>Convierte texto en voz sintética"]
+    I["🗣️ <b>Voz personalizada</b><br/>Modelo entrenado con grabaciones<br/><i>previas a la enfermedad</i>"]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
 ```
 
 ### 4.2. Avance clave: decodificación de habla interna (inner speech)
